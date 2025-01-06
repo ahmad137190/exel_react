@@ -1,25 +1,124 @@
-import logo from './logo.svg';
-import './App.css';
+import React, {useState} from 'react';
+import axios from 'axios';
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    console.log(this)
+    const [file, setFile] = useState(null);
+    const [searchCriteria, setSearchCriteria] = useState({});
+    const [newData, setNewData] = useState({});
+    const [result, setResult] = useState(null);
+    const [visible, setVisible] = useState(false);
+
+    const handleFileUpload = async () => {
+        const formData = new FormData();
+        formData.append('file', file);
+
+        const response = await axios.post('http://localhost:5000/file-upload', formData, {
+            headers: {'Content-Type': 'multipart/form-data'},
+        });
+
+        console.log(response.data);
+    };
+
+    const handleSearchOrAdd = async () => {
+        const response = await axios.post('http://localhost:5000/search-or-add', {
+            filePath: 'uploads/data.xlsx',
+            searchCriteria,
+            newData,
+        });
+        //if(response.data?.item?.Name)
+        setVisible(true);
+      //  alert(response.data?.exit)
+        if(response.data?.exit){
+           // alert(response.data?.item)
+            setSearchCriteria(response.data?.item)
+        }
+        setResult(response.data);
+    };
+    const handleUpdate = async () => {
+        const response = await axios.post('http://localhost:5000/search-or-add', {
+            filePath: 'uploads/data.xlsx',
+            searchCriteria,
+            newData,
+            update:true,
+        });
+        setVisible(false);
+        setResult(response.data);
+    };
+
+    return (
+        <div>
+            <h1>Excel File Management</h1>
+
+            <input
+                type="file"
+                onChange={e => setFile(e.target.files[0])}
+            />
+            <button onClick={handleFileUpload}>Upload File</button>
+
+            <h2>Search or Add</h2>
+            <input
+                required
+                type="text"
+                placeholder="Name"
+                disabled ={visible}
+                onChange={e => setSearchCriteria({...searchCriteria, Name: e.target.value})}
+
+                value={searchCriteria?.Name}
+            />
+            <input
+                required
+                type="text"
+                placeholder="LastName"
+                disabled ={visible}
+
+                onChange={e => setSearchCriteria({...searchCriteria, LastName: e.target.value})}
+                value={searchCriteria?.LastName}
+
+            />
+            {
+                visible && <input
+                    required
+                    type="text"
+                    placeholder="IdNumber"
+                    onChange={e => setSearchCriteria({...searchCriteria, IdNumber: e.target.value})}
+                value={searchCriteria?.IdNumber}
+                />
+            }
+
+            {
+                visible &&
+                <input
+                    required
+                    type="text"
+                    placeholder="NumberPhone"
+                    onChange={e => setSearchCriteria({...searchCriteria, NumberPhone: e.target.value})}
+                    value={searchCriteria?.NumberPhone}
+
+                />
+            }
+            {
+                !visible &&
+                <button onClick={() => {
+                    setVisible(false);
+                    handleSearchOrAdd()
+
+                }}>Search or Add
+                </button>
+            }
+            {
+                visible &&
+                <button onClick={() => {
+                    setVisible(false);
+                    handleUpdate()
+
+                }}>Update
+                </button>
+            }
+
+            {result && <pre>{JSON.stringify(result, null, 2)}</pre>}
+        </div>
+    );
 }
 
 export default App;
