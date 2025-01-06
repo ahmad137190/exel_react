@@ -12,30 +12,38 @@ function App() {
     const [visible, setVisible] = useState(false);
 
     const handleFileUpload = async () => {
-        const formData = new FormData();
-        formData.append('file', file);
 
-        const response = await axios.post(BaseUrl+'/file-upload', formData, {
-            headers: {'Content-Type': 'multipart/form-data'},
-        });
+            const formData = new FormData();
+            formData.append('file', file);
 
-        console.log(response.data);
+            const response = await axios.post(BaseUrl+'/file-upload', formData, {
+                headers: {'Content-Type': 'multipart/form-data'},
+            });
+
+            console.log(response.data);
+
+
     };
 
     const handleSearchOrAdd = async () => {
-        const response = await axios.post(BaseUrl+'/search-or-add', {
-            filePath: 'uploads/data.xlsx',
-            searchCriteria,
-            newData,
-        });
-        //if(response.data?.item?.Name)
-        setVisible(true);
-      //  alert(response.data?.exit)
-        if(response.data?.exit){
-           // alert(response.data?.item)
-            setSearchCriteria(response.data?.item)
+        if(searchCriteria.Name?.length>0 && searchCriteria.LastName?.length>0){
+            const response = await axios.post(BaseUrl+'/search-or-add', {
+                filePath: 'uploads/data.xlsx',
+                searchCriteria,
+                newData,
+            });
+            //if(response.data?.item?.Name)
+            setVisible(true);
+            //  alert(response.data?.exit)
+            if(response.data?.exit){
+                // alert(response.data?.item)
+                setSearchCriteria(response.data?.item)
+            }
+            setResult(response.data);
+        }else {
+            alert("Entering the first and last name is required")
         }
-        setResult(response.data);
+
     };
     const handleUpdate = async () => {
         const response = await axios.post(BaseUrl+'/search-or-add', {
