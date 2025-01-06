@@ -4,6 +4,8 @@ import axios from 'axios';
 function App() {
     console.log(this)
     const [file, setFile] = useState(null);
+   // const [BaseUrl, setBaseUrl] = useState("http://localhost:5000");
+    const [BaseUrl, setBaseUrl] = useState("https://exel-nodejs-backend.onrender.com");
     const [searchCriteria, setSearchCriteria] = useState({});
     const [newData, setNewData] = useState({});
     const [result, setResult] = useState(null);
@@ -13,7 +15,7 @@ function App() {
         const formData = new FormData();
         formData.append('file', file);
 
-        const response = await axios.post('http://localhost:5000/file-upload', formData, {
+        const response = await axios.post(BaseUrl+'/file-upload', formData, {
             headers: {'Content-Type': 'multipart/form-data'},
         });
 
@@ -21,7 +23,7 @@ function App() {
     };
 
     const handleSearchOrAdd = async () => {
-        const response = await axios.post('http://localhost:5000/search-or-add', {
+        const response = await axios.post(BaseUrl+'/search-or-add', {
             filePath: 'uploads/data.xlsx',
             searchCriteria,
             newData,
@@ -36,7 +38,7 @@ function App() {
         setResult(response.data);
     };
     const handleUpdate = async () => {
-        const response = await axios.post('http://localhost:5000/search-or-add', {
+        const response = await axios.post(BaseUrl+'/search-or-add', {
             filePath: 'uploads/data.xlsx',
             searchCriteria,
             newData,
