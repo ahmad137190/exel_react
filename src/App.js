@@ -52,11 +52,11 @@ function App() {
         <div>
             <h1>Excel File Management</h1>
 
-            <input
+{/*            <input
                 type="file"
                 onChange={e => setFile(e.target.files[0])}
             />
-            <button onClick={handleFileUpload}>Upload File</button>
+            <button onClick={handleFileUpload}>Upload File</button>*/}
 
             <h2>Search or Add</h2>
             <input
