@@ -4,8 +4,8 @@ import axios from 'axios';
 function App() {
     console.log(this)
     const [file, setFile] = useState(null);
-   // const [BaseUrl, setBaseUrl] = useState("http://localhost:5000");
-    const [BaseUrl, setBaseUrl] = useState("https://exel-nodejs-backend.onrender.com");
+   const [BaseUrl, setBaseUrl] = useState("http://localhost:5000");
+   //  const [BaseUrl, setBaseUrl] = useState("https://exel-nodejs-backend.onrender.com");
     const [searchCriteria, setSearchCriteria] = useState({});
     const [newData, setNewData] = useState({});
     const [result, setResult] = useState(null);
@@ -27,6 +27,9 @@ function App() {
 
     const handleSearchOrAdd = async () => {
         if(searchCriteria.Name?.length>0 && searchCriteria.LastName?.length>0){
+      //    let  trimmed_x = searchCriteria.map(s => s.trim());
+            Object.keys(searchCriteria).forEach(k => searchCriteria[k] = searchCriteria[k].trim());
+
             const response = await axios.post(BaseUrl+'/search-or-add', {
                 filePath: 'uploads/data.xlsx',
                 searchCriteria,
